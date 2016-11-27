@@ -1,0 +1,6 @@
+---
+applications:
+- name: hashmap-client
+  memory: 256m
+  instances: 1
+  path: target/cloud-hashmap-client-0.0.1-SNAPSHOT.jar
