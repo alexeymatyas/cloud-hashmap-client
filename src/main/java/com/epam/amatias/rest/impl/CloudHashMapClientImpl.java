@@ -35,18 +35,17 @@ public class CloudHashMapClientImpl implements CloudHashMapClient {
     public void init() {
         CloudFactory cloudFactory = new CloudFactory();
         Cloud cloud = cloudFactory.getCloud();
-        url = "http://hashmap-service-broker.local.pcfdev.io";
-        if (cloud != null) {
-            List<ServiceInfo> infos = cloud.getServiceInfos();
-            for(ServiceInfo si: infos) {
-                logger.info("Boud service id: " + si.getId());
-                if(si instanceof HashMapServiceInfo) {
-                    HashMapServiceInfo hsi = (HashMapServiceInfo) si;
-                    url = hsi.getUrl();
-                    logger.error("Bound service url: " + hsi.getUrl());
-                }
+        url = null;
+
+        List<ServiceInfo> serviceInfos = cloud.getServiceInfos();
+        for(ServiceInfo serviceInfo: serviceInfos) {
+            if(serviceInfo instanceof HashMapServiceInfo) {
+                HashMapServiceInfo hsi = (HashMapServiceInfo) serviceInfo;
+                url = ((HashMapServiceInfo) serviceInfo).getUrl();
             }
         }
+
+        logger.error("No hashmap instance bound to this app!");
 
         String plainCredentials = "admin:admin";
         byte[] plainCredentialsBytes = plainCredentials.getBytes();
