@@ -21,8 +21,6 @@ import java.util.*;
 /**
  * Created by Alexey on 27.11.2016.
  */
-@Service
-@Profile("cloud")
 public class CloudHashMapClientImpl implements CloudHashMapClient {
     private static final Log logger = LogFactory.getLog(CloudHashMapClientImpl.class);
 
@@ -31,21 +29,8 @@ public class CloudHashMapClientImpl implements CloudHashMapClient {
     private ObjectMapper objectMapper = new ObjectMapper();
     private static final RestTemplate restTemplate = new RestTemplate();
 
-    @PostConstruct
-    public void init() {
-        CloudFactory cloudFactory = new CloudFactory();
-        Cloud cloud = cloudFactory.getCloud();
-        url = null;
-
-        List<ServiceInfo> serviceInfos = cloud.getServiceInfos();
-        for(ServiceInfo serviceInfo: serviceInfos) {
-            if(serviceInfo instanceof HashMapServiceInfo) {
-                HashMapServiceInfo hsi = (HashMapServiceInfo) serviceInfo;
-                url = ((HashMapServiceInfo) serviceInfo).getUrl();
-            }
-        }
-
-        logger.error("No hashmap instance bound to this app!");
+    public CloudHashMapClientImpl(String url) {
+        this.url = url;
 
         String plainCredentials = "admin:admin";
         byte[] plainCredentialsBytes = plainCredentials.getBytes();
